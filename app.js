@@ -27,13 +27,13 @@ const mainSprite          = document.getElementById('main-sprite');
   const textEl     = document.getElementById('intro-text');
   const pressKeyEl = document.getElementById('intro-press-key');
 
-  const INTRO = `The year is 2142. You are aboard a deep-space research station orbiting Saturn's moon, Titan. The station's primary mission: testing atmospheric synthesis prototypes that could one day make Mars habitable for human colonies.
+  const INTRO = `The year is 2142. You are aboard a deepmind-space research station orbiting Saturn's moon, Titan. The station's primary mission is to test experimental atmospheric synthesis prototypes designed to make Mars habitable for future human colonies.
 
-At exactly 04:16, automated warnings triggered a critical breach alert from Sector 7 — Oxygen Life Support. The main oxygen feed line was physically severed, venting the station's air reserves into space.
+At exactly 04:16, the station's automated warnings went off: a critical breach alert from Sector 7 (Oxygen Life Support). The main oxygen feed line was physically severed, venting the station's air reserves directly into space. Because of the automatic lockdowns, the suspect list is restricted to the four crew members who were awake and patrolling near the affected sectors.
 
-Because of automatic lockdowns, the suspect list is restricted to the four crew members who were awake and patrolling near the affected sectors. As Station Commander, you have secured them in the Sub-Space Interrogation Channel.
+As the station captain, you immediately isolated the sector and gathered the four suspects in the Sub-Space Interrogation Channel. The situation is dire: oxygen reserves are dropping rapidly, giving you time for a few questions. If you successfully deduce the culprit, you can trigger the airlock vent to eject the saboteur, repair the main feed with the innocent crew, and secure the station.
 
-Oxygen reserves are dropping fast. You have 10 questions to identify the saboteur. Eject the right person through the airlock and the innocent crew can repair the feed line. Eject the wrong person — and no one leaves this station alive.`;
+However, the backup life support system is critically damaged. The only guaranteed path to survival is to identify the saboteur, lock them on the failing station, and escape via the emergency evacuation pod with the other three innocent crew members. Ejecting the wrong crew member will doom the remaining survivors to suffocation as the actual culprit disables the escape pods.`;
 
   let idx = 0;
   let twId = null;
