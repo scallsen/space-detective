@@ -126,7 +126,7 @@ const suspects = {
   chief_engineer: {
     name: "Chief Engineer",
     colorClass: "cyan",
-    sprite: "sprites/elena.png",
+    sprite: "images/fullsprite_chiefengineer.png",
     responses: {
       alibi: "I was in Sector 2 troubleshooting a reactor issue. The Technician saw me there briefly at 04:05.",
       security_guard: "The Security Guard is supposed to be patrolling. I do not know where that role was during the leak.",
@@ -137,7 +137,7 @@ const suspects = {
   technician: {
     name: "Technician",
     colorClass: "amber",
-    sprite: "sprites/marcus.png",
+    sprite: "images/fullsprite_techinician.png",
     responses: {
       alibi: "I was doing routine maintenance in Sector 2, then went to the Lounge in Sector 5 for coffee.",
       security_guard: "I did not see the Security Guard in the Reactor Room or the Lounge.",
@@ -148,7 +148,7 @@ const suspects = {
   botanist: {
     name: "Botanist",
     colorClass: "green",
-    sprite: "sprites/chen.png",
+    sprite: "images/placeholder.png",
     responses: {
       alibi: "I was in the Greenhouse checking hydroponic nutrient levels. I was working alone.",
       security_guard: "The Security Guard? No, I did not see that role in the Greenhouse.",
@@ -159,7 +159,7 @@ const suspects = {
   security_guard: {
     name: "Security Guard",
     colorClass: "red",
-    sprite: "sprites/jax.png",
+    sprite: "images/fullsprite_securityguard.png",
     responses: {
       alibi: "I was in Sector 4 helping the Botanist move heavy equipment crates. Standard security assistance.",
       security_guard: "I was doing my duty: patrols, checks, and emergency response.",
