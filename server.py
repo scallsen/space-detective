@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -89,6 +90,7 @@ ROLE_ALIASES = {
     "security": "Security Guard",
     "guard": "Security Guard",
 }
+MAX_RESPONSE_SENTENCES = 3
 
 
 def normalize_role(role: str) -> str:
@@ -114,7 +116,21 @@ Database memory rules:
 - You may inspect another role only through get_alibi_for_role, which returns only records visible to your own role.
 - If a tool returns no visible evidence, answer with uncertainty instead of inventing a fact.
 - Keep all database, SQL, table, tool, and hidden flag details off-screen. The captain should hear natural in-role dialogue only.
+- Use two sentences by default. Never return more than three sentences.
 """
+
+
+def limit_response_sentences(text: str, max_sentences: int = MAX_RESPONSE_SENTENCES) -> str:
+    """Cap role dialogue so one agent cannot flood the interrogation UI."""
+    clean_text = " ".join(text.strip().split())
+    if not clean_text:
+        return clean_text
+
+    sentences = re.findall(r"[^.!?]+(?:[.!?]+|$)", clean_text)
+    if len(sentences) <= max_sentences:
+        return clean_text
+
+    return " ".join(sentence.strip() for sentence in sentences[:max_sentences])
 
 
 def build_role_system_instructions(role: str) -> str:
@@ -134,7 +150,8 @@ def build_role_system_instructions(role: str) -> str:
         f"{role_agent_instructions}\n\n"
         "# Output Contract\n"
         "Return a JSON object with one field named `response`. "
-        f"The `response` must be only what the {role} says to the captain.\n\n"
+        f"The `response` must be only what the {role} says to the captain. "
+        "Use two sentences by default and never more than three sentences.\n\n"
         f"{DB_TOOL_INSTRUCTIONS}"
     )
 
@@ -211,7 +228,8 @@ async def ask_role_agent(role: str, question: str, api_key: str) -> str:
     role_question = (
         f"The captain is interrogating the {role}.\n"
         f"Captain's question: {question}\n\n"
-        f"Answer only as the {role}. Use role names, not personal names."
+        f"Answer only as the {role}. Use role names, not personal names. "
+        "Use two sentences by default and never more than three sentences."
     )
 
     async with Agent(config=config) as agent:
@@ -219,7 +237,7 @@ async def ask_role_agent(role: str, question: str, api_key: str) -> str:
         structured_data = await response.structured_output()
         if structured_data is None:
             raise RuntimeError(f"{role} failed to return structured output.")
-        return structured_data.response
+        return limit_response_sentences(structured_data.response)
 
 
 @app.post("/api/interrogate")
