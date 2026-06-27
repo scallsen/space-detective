@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airlock Sabotage // Life Support Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stars-overlay"></div>
+  
+  <main class="console-container">
+    <!-- Header Area -->
+    <header class="console-header">
+      <div class="logo-area">
+        <span class="pulse-dot"></span>
+        <h1 class="console-title">E.R.A.S. SYSTEM v1.0.4 // CRITICAL MONITOR</h1>
+      </div>
+      <div class="system-status">
+        <div class="status-indicator">
+          <span class="label">OXYGEN RESERVE</span>
+          <div class="progress-bar-container">
+            <div id="oxygen-bar" class="progress-bar" style="width: 100%;"></div>
+          </div>
+          <span id="oxygen-pct" class="value">100%</span>
+        </div>
+        <div class="status-indicator">
+          <span class="label">INTERROGATIONS</span>
+          <span id="interrogation-counter" class="value">10 / 10 REMAINING</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <section class="workspace">
+      
+      <!-- Left Suspects Panel -->
+      <div class="panel suspects-panel">
+        <h2 class="panel-title">CREW ROSTER & LOCATION LOGS</h2>
+        <div class="suspect-grid">
+          
+          <!-- Elena Card -->
+          <div class="suspect-card" id="card-elena">
+            <div class="card-header">
+              <div class="profile-header">
+                <span class="avatar cyan">EL</span>
+                <div>
+                  <h3>Elena Rostova</h3>
+                  <span class="role">Chief Engineer</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-details">
+              <p><strong>Sector:</strong> 02 (Reactor Core)</p>
+              <p><strong>Status:</strong> Active</p>
+            </div>
+            <button class="btn btn-vent" onclick="ventSuspect('elena')">VENT AIRLOCK</button>
+          </div>
+
+          <!-- Marcus Card -->
+          <div class="suspect-card" id="card-marcus">
+            <div class="card-header">
+              <div class="profile-header">
+                <span class="avatar gold">MA</span>
+                <div>
+                  <h3>Marcus Vance</h3>
+                  <span class="role">Technician</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-details">
+              <p><strong>Sector:</strong> 02 / 05 (Lounge)</p>
+              <p><strong>Status:</strong> Active</p>
+            </div>
+            <button class="btn btn-vent" onclick="ventSuspect('marcus')">VENT AIRLOCK</button>
+          </div>
+
+          <!-- Dr. Chen Card -->
+          <div class="suspect-card" id="card-chen">
+            <div class="card-header">
+              <div class="profile-header">
+                <span class="avatar emerald">CH</span>
+                <div>
+                  <h3>Dr. Mei-Ling Chen</h3>
+                  <span class="role">Lead Botanist</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-details">
+              <p><strong>Sector:</strong> 04 (Greenhouse)</p>
+              <p><strong>Status:</strong> Active</p>
+            </div>
+            <button class="btn btn-vent" onclick="ventSuspect('chen')">VENT AIRLOCK</button>
+          </div>
+
+          <!-- Jax Card -->
+          <div class="suspect-card" id="card-jax">
+            <div class="card-header">
+              <div class="profile-header">
+                <span class="avatar rose">JA</span>
+                <div>
+                  <h3>Jax Thorne</h3>
+                  <span class="role">Security Guard</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-details">
+              <p><strong>Sector:</strong> 04 (Greenhouse) *Claimed</p>
+              <p><strong>Status:</strong> Active</p>
+            </div>
+            <button class="btn btn-vent" onclick="ventSuspect('jax')">VENT AIRLOCK</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Chat Interrogation Panel -->
+      <div class="panel chat-panel">
+        <h2 class="panel-title">SUB-SPACE INTERROGATION CHANNEL</h2>
+        
+        <div id="chat-log" class="chat-log">
+          <!-- Default broadcast message -->
+          <div class="system-message">
+            <p>[SYSTEM DETECTED]: OXYGEN LINE SEVERED IN SECTOR 7 AT 04:15. ALL CREW ORDERED TO QUARANTINE. CHAT TERMINAL ESTABLISHED.</p>
+            <p>[INSTRUCTION]: ASK QUESTIONS TO LOCATE THE CONTRADICTION. CHOOSE WISELY. VENTING IS FINAL.</p>
+          </div>
+        </div>
+
+        <form id="chat-form" class="chat-input-area" onsubmit="handleQuestionSubmit(event)">
+          <input type="text" id="chat-input" placeholder="Type interrogation query here (e.g. 'Where were you at 04:15?')..." required autocomplete="off">
+          <button type="submit" class="btn btn-send">SEND BROADSCAST</button>
+        </form>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Endgame Overlay -->
+  <div id="end-overlay" class="overlay hidden">
+    <div class="overlay-content">
+      <h2 id="end-title">SYSTEM OFFLINE</h2>
+      <p id="end-desc"></p>
+      <button class="btn btn-retry" onclick="resetGame()">REBOOT CONSOLE</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

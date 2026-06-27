@@ -1,0 +1,463 @@
+/* style.css - Premium Sci-Fi Interface for Airlock Sabotage */
+
+:root {
+  --bg-dark: #05070f;
+  --bg-gradient: linear-gradient(135deg, #05070f 0%, #0d1224 100%);
+  --panel-bg: rgba(13, 20, 38, 0.6);
+  --border-glow: rgba(56, 189, 248, 0.15);
+  --border-glow-active: rgba(56, 189, 248, 0.4);
+  
+  /* Accent Colors */
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --cyan: #06b6d4;
+  --gold: #f59e0b;
+  --emerald: #10b981;
+  --rose: #f43f5e;
+  --alert-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Stars background overlay */
+.stars-overlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+  background-size: 550px 550px, 350px 350px;
+  background-position: 0 0, 40px 60px;
+  opacity: 0.2;
+  z-index: 0;
+  animation: backgroundScroll 120s linear infinite;
+}
+
+@keyframes backgroundScroll {
+  from { background-position: 0 0, 40px 60px; }
+  to { background-position: 550px 550px, 390px 410px; }
+}
+
+/* Container */
+.console-container {
+  width: 95vw;
+  height: 90vh;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05);
+}
+
+/* Header styling */
+.console-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-glow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(8, 12, 28, 0.8);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.console-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--alert-red);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--alert-red);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.4; }
+}
+
+.system-status {
+  display: flex;
+  gap: 32px;
+}
+
+.status-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.status-indicator .label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.status-indicator .value {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.progress-bar-container {
+  width: 150px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan) 0%, var(--rose) 100%);
+  transition: width 0.5s ease-in-out;
+}
+
+/* Grid Workspace */
+.workspace {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 4fr 5fr;
+  overflow: hidden;
+}
+
+/* Panels */
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.suspects-panel {
+  border-right: 1px solid var(--border-glow);
+}
+
+.panel-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* Suspect Grid */
+.suspect-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.suspect-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  min-height: 200px;
+}
+
+.suspect-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+  transform: translateY(-2px);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  font-family: 'Share Tech Mono', monospace;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.avatar.cyan { color: var(--cyan); border: 2px solid var(--cyan); }
+.avatar.gold { color: var(--gold); border: 2px solid var(--gold); }
+.avatar.emerald { color: var(--emerald); border: 2px solid var(--emerald); }
+.avatar.rose { color: var(--rose); border: 2px solid var(--rose); }
+
+.suspect-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.suspect-card .role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.card-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.card-details strong {
+  color: var(--text-main);
+}
+
+/* Interrogation Chat Panel */
+.chat-panel {
+  background: rgba(4, 7, 18, 0.4);
+}
+
+.chat-log {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.system-message {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--gold);
+  line-height: 1.5;
+  background: rgba(245, 158, 11, 0.05);
+  border-left: 2px solid var(--gold);
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.chat-bubble-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+}
+
+.chat-bubble-container.user {
+  align-self: flex-end;
+}
+
+.chat-bubble-container.suspect {
+  align-self: flex-start;
+}
+
+.chat-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.chat-bubble-container.user .chat-bubble {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid var(--cyan);
+  color: var(--text-main);
+  border-bottom-right-radius: 0;
+}
+
+.chat-bubble-container.user .chat-name {
+  color: var(--cyan);
+  align-self: flex-end;
+}
+
+.chat-bubble-container.suspect .chat-bubble {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border-bottom-left-radius: 0;
+}
+
+/* Chat Input Form */
+.chat-input-area {
+  display: flex;
+  gap: 12px;
+}
+
+#chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+#chat-input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+/* Buttons */
+.btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-vent {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--alert-red);
+  color: var(--alert-red);
+  width: 100%;
+}
+
+.btn-vent:hover {
+  background: var(--alert-red);
+  color: white;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.btn-send {
+  background: var(--cyan);
+  color: #040712;
+}
+
+.btn-send:hover {
+  background: #22d3ee;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+/* Endgame Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(2, 4, 10, 0.9);
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+  background: rgba(13, 20, 38, 0.8);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
+}
+
+.overlay-content h2 {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 2.2rem;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.overlay-content p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.btn-retry {
+  background: transparent;
+  border: 1px solid var(--text-main);
+  color: var(--text-main);
+  padding: 12px 28px;
+}
+
+.btn-retry:hover {
+  background: var(--text-main);
+  color: #02040a;
+}
+
+.victory-title {
+  color: var(--emerald);
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.defeat-title {
+  color: var(--alert-red);
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
