@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 650" width="100%" height="100%" style="background-color: #050a12; border: 2px solid #1a2f4c; border-radius: 8px;">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0e1826" stroke-width="1"/>
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#17263d" stroke-width="1.5"/>
+    </pattern>
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <linearGradient id="box-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0b172a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050c18" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&amp;family=Rajdhani:wght@500;600;700&amp;display=swap');
+    .sec-id { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 11px; fill: #00f3ff; letter-spacing: 2px; }
+    .sec-name { font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 16px; fill: #ffffff; letter-spacing: 1px; }
+    .hud-text { font-family: 'Orbitron', sans-serif; font-size: 10px; fill: #4c688c; letter-spacing: 1px; }
+    .title-main { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; fill: #00f3ff; letter-spacing: 4px; }
+    .title-sub { font-family: 'Rajdhani', sans-serif; font-size: 11px; fill: #4c688c; letter-spacing: 3px; }
+    .tech-line-sub { stroke: #00a8e8; stroke-dasharray: 4, 3; stroke-width: 1.5; fill: none; }
+  </style>
+
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  <rect width="100%" height="100%" fill="none" stroke="#17263d" stroke-width="4" />
+
+  <g transform="translate(30, 30)">
+    <text class="title-main" x="0" y="20">STATION MAP</text>
+    <circle cx="350" cy="45" r="2" fill="#00f3ff" />
+  </g>
+
+  <g transform="translate(30, 610)">
+    <text class="hud-text" x="0" y="0">SYSTEMS STATUS: NOMINAL  //  SEC_NET: ACTIVE  </text>
+  </g>
+
+  <!-- Connectors -->
+  <line x1="400" y1="120" x2="400" y2="290" class="tech-line-sub" />
+  <line x1="400" y1="360" x2="400" y2="530" class="tech-line-sub" />
+  <line x1="280" y1="205" x2="520" y2="205" stroke="#0077aa" stroke-dasharray="2,2" stroke-width="1.5" />
+  <line x1="280" y1="205" x2="520" y2="205" stroke="#00d8ff" stroke-width="1" opacity="0.4" />
+  <line x1="280" y1="445" x2="520" y2="445" stroke="#0077aa" stroke-dasharray="2,2" stroke-width="1.5" />
+  <line x1="280" y1="445" x2="520" y2="445" stroke="#00d8ff" stroke-width="1" opacity="0.4" />
+  <path d="M 180 240 L 180 310 L 300 310" class="tech-line-sub" />
+  <path d="M 620 240 L 620 310 L 500 310" class="tech-line-sub" />
+
+  <!-- Junctions -->
+  <g transform="translate(400, 205)">
+    <circle cx="0" cy="0" r="5" fill="#050c18" stroke="#00f3ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <circle cx="0" cy="0" r="2" fill="#00f3ff" />
+  </g>
+  <g transform="translate(400, 445)">
+    <circle cx="0" cy="0" r="5" fill="#050c18" stroke="#00f3ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <circle cx="0" cy="0" r="2" fill="#00f3ff" />
+  </g>
+
+  <!-- Sector 4 -->
+  <g transform="translate(300, 50)">
+    <rect width="225" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 210 0 L 225 0 L 225 10 M 225 60 L 225 70 L 210 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#00ffaa" stroke-width="1.5" filter="url(#glow-green)" />
+    <rect x="10" y="8" width="6" height="4" fill="#00ffaa" />
+    <text class="sec-id" x="20" y="14" style="fill:#00ffaa;">SEC-04</text>
+    <text class="sec-name" x="20" y="42">HYDROPONICS GREEN</text>
+    <line x1="40" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 2 -->
+  <g transform="translate(80, 170)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#ff3b30" stroke-width="1.5" filter="url(#glow-red)" />
+    <rect x="10" y="8" width="4" height="4" fill="#ff3b30" />
+    <text class="sec-id" x="20" y="14" style="fill:#ff3b30;">SEC-02</text>
+    <text class="sec-name" x="20" y="42">REACTOR CORE</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 5 -->
+  <g transform="translate(520, 170)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#00f3ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <rect x="10" y="8" width="4" height="4" fill="#00f3ff" />
+    <text class="sec-id" x="20" y="14">SEC-05</text>
+    <text class="sec-name" x="20" y="42">CREW LOUNGE</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 6 -->
+  <g transform="translate(300, 290)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#ffaa00" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <rect x="10" y="8" width="4" height="4" fill="#ffaa00" />
+    <text class="sec-id" x="20" y="14" style="fill:#ffaa00;">SEC-06</text>
+    <text class="sec-name" x="20" y="42">SECURITY HUB</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 3 -->
+  <g transform="translate(80, 410)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#00f3ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <rect x="10" y="8" width="4" height="4" fill="#00f3ff" />
+    <text class="sec-id" x="20" y="14">SEC-03</text>
+    <text class="sec-name" x="20" y="42">CREW QUARTERS</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 7 -->
+  <g transform="translate(520, 410)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#00f3ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <rect x="10" y="8" width="4" height="4" fill="#00f3ff" />
+    <text class="sec-id" x="20" y="14">SEC-07</text>
+    <text class="sec-name" x="20" y="42">LIFE SUPPORT</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+
+  <!-- Sector 1 -->
+  <g transform="translate(300, 530)">
+    <rect width="200" height="70" rx="4" fill="url(#box-grad)" stroke="#1a2f4c" stroke-width="1" />
+    <path d="M 0 10 L 0 0 L 10 0 M 190 0 L 200 0 L 200 10 M 200 60 L 200 70 L 190 70 M 10 70 L 0 70 L 0 60" fill="none" stroke="#bd00ff" stroke-width="1.5" filter="url(#glow-cyan)" />
+    <rect x="10" y="8" width="4" height="4" fill="#bd00ff" />
+    <text class="sec-id" x="20" y="14" style="fill:#bd00ff;">SEC-01</text>
+    <text class="sec-name" x="20" y="42">COMMAND DECK</text>
+    <line x1="20" y1="52" x2="180" y2="52" stroke="#1a2f4c" stroke-width="1"/>
+  </g>
+</svg>
