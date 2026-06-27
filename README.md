@@ -125,7 +125,7 @@ Then open `http://localhost:8080`.
 
 Each crew member is a separate Gemini agent with:
 
-- A **system prompt** built from the shared scenario, their role profile, and private instructions
+- A **system prompt** built from the shared scenario, their role profile, and private instructions that determines character.
 - **Role-scoped database tools** — agents can only query logs and alibis visible to their own role
 - **Structured output** — responses are returned as `{"response": "..."}` and validated by Pydantic
 
