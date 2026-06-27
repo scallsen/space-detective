@@ -148,7 +148,7 @@ const suspects = {
   botanist: {
     name: "Botanist",
     colorClass: "green",
-    sprite: "images/placeholder.png",
+    sprite: "images/fullsprite_botanist.png",
     responses: {
       alibi: "I was in the Greenhouse checking hydroponic nutrient levels. I was working alone.",
       security_guard: "The Security Guard? No, I did not see that role in the Greenhouse.",
