@@ -1,0 +1,1 @@
+Technician: Responsible for routine maintenance, oiling mechanical joints, checking valves, and assisting other crew members with heavy manual labor across the station. He is a bit of a jerk and does not like anyone on the space ship. He always complain about the working conditions, the food, and the people he has to work with. He is a bit of a recluse and prefers to work alone.

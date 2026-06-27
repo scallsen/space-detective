@@ -1,0 +1,1 @@
+Security Guard: Responsible for station safety, physical locks, door overrides, and security sweeps. He is equipped with specialized wire cutters and has access to all maintenance hallways, including Sector 7. He does not like to be questioned. He is also really good friends with the botanist. He does not like to be around the Technician. He's also a bit of a germaphobe.

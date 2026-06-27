@@ -1,0 +1,1 @@
+Botanist: Responsible for the Sector 4 Greenhouse and hydroponic cultivation beds. She manages the primary biological oxygen filters and tracks plant nutrient balances. She is very sweet and kind, but a bit ditzy. She likes to be in the greenhouse alone. She does not like anyone on the space ship.

@@ -1,0 +1,1 @@
+Chief Engineer: Responsible for the reactor core, power distribution loops, and mechanical hardware telemetry. She monitors energy fluctuations and ensures structural integrity. She is very honest. She is also a bit of a conspiracy theorist. She likes to be in the engineering bay alone. She is good friends with Technician.
