@@ -1,463 +1,609 @@
-/* style.css - Premium Sci-Fi Interface for Airlock Sabotage */
+/* style.css — 16-bit Visual Novel layout for Airlock Sabotage */
 
 :root {
-  --bg-dark: #05070f;
-  --bg-gradient: linear-gradient(135deg, #05070f 0%, #0d1224 100%);
-  --panel-bg: rgba(13, 20, 38, 0.6);
-  --border-glow: rgba(56, 189, 248, 0.15);
-  --border-glow-active: rgba(56, 189, 248, 0.4);
-  
-  /* Accent Colors */
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --cyan: #06b6d4;
-  --gold: #f59e0b;
-  --emerald: #10b981;
-  --rose: #f43f5e;
-  --alert-red: #ef4444;
+  --gold:       #c8960c;
+  --gold-dark:  #7a5c08;
+  --gold-light: #f0c840;
+  --dialog-bg:  #06130a;
+  --hud-bg:     #000;
+  --cyan:       #00d4ff;
+  --amber:      #ffcc00;
+  --green:      #00e87a;
+  --red:        #ff3c50;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--bg-gradient);
-  color: var(--text-main);
+  font-family: 'VT323', monospace;
+  background: #010c18;
+  color: #d8e8d0;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
 }
 
-/* Stars background overlay */
-.stars-overlay {
-  content: '';
+/* CRT scanlines */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0,0,0,0.14) 3px,
+    rgba(0,0,0,0.14) 4px
+  );
+  pointer-events: none;
+  z-index: 900;
+}
+
+/* ================================================================
+   GAME SCREEN — vertical flex column
+================================================================ */
+.game-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================
+   HUD BAR
+================================================================ */
+.hud-bar {
+  flex-shrink: 0;
+  height: 44px;
+  background: var(--hud-bg);
+  border-bottom: 4px solid var(--gold);
+  box-shadow: 0 4px 0 var(--gold-dark);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+}
+
+.hud-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: var(--gold-light);
+  text-shadow: 2px 2px #000;
+  letter-spacing: 2px;
+}
+
+.hud-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hud-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-stat-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  color: #607080;
+  letter-spacing: 1px;
+}
+
+.hud-stat-val {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  color: var(--gold-light);
+}
+
+.hud-bar-wrap {
+  width: 90px;
+  height: 10px;
+  background: #111;
+  border: 2px solid #2a3a20;
+  overflow: hidden;
+}
+
+.hud-oxygen-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #00ff88 0%, #00d4ff 100%);
+  transition: width 0.4s steps(10, end);
+}
+
+.hud-oxygen-bar.danger {
+  background: var(--red);
+  animation: bar-blink 0.5s steps(1) infinite;
+}
+
+@keyframes bar-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.hud-sep {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--gold-dark);
+}
+
+/* ================================================================
+   SCENE WRAPPER — takes all space between HUD and dialog
+================================================================ */
+.scene-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Checkerboard background */
+.scene-bg {
   position: absolute;
-  top: 0;
+  inset: 0;
+  background:
+    repeating-conic-gradient(
+      #0d1d2e 0% 25%,
+      #152840 0% 50%
+    ) 0 0 / 44px 44px;
+  image-rendering: pixelated;
+}
+
+/* Floor fade — darkens behind the floating dialog */
+.scene-floor {
+  position: absolute;
+  bottom: 0;
   left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(0, 4, 1, 0.5) 45%,
+    rgba(0, 4, 1, 0.82) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ================================================================
+   CHARACTER STAGE
+================================================================ */
+.character-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+  padding-bottom: 0;
+}
+
+.character-glow {
+  position: absolute;
+  bottom: -20px;
+  width: 260px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,180,255,0.18) 0%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.character-sprite {
+  position: relative;
+  height: 100%;
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: auto;
+  z-index: 4;
+  /* Prevent the image being taller than the stage */
+  max-width: 55%;
+}
+
+/* ================================================================
+   SUSPECT SIDEBAR (floating right panel)
+================================================================ */
+.suspect-sidebar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 148px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.sidebar-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.4rem;
+  color: var(--gold-dark);
+  letter-spacing: 3px;
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--gold-dark);
+}
+
+/* Individual chibi card */
+.chibi-entry {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.78);
+  border: 2px solid rgba(200,152,12,0.25);
+  box-shadow: 2px 2px 0 #000;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.chibi-entry:hover {
+  border-color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.chibi-entry.active {
+  border-color: var(--gold);
+  background: rgba(10, 18, 4, 0.92);
+  box-shadow: 2px 2px 0 #000, 0 0 10px rgba(200,152,12,0.3);
+}
+
+.chibi-entry.vented {
+  opacity: 0.3;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+/* Chibi portrait box */
+.chibi-box {
+  flex-shrink: 0;
+  width: 42px;
+  height: 52px;
+  background: #2a2a2a;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.chibi-box.cyan   { color: var(--cyan);  background: #0d1e24; }
+.chibi-box.amber  { color: var(--amber); background: #1e1800; }
+.chibi-box.green  { color: var(--green);  background: #081c10; }
+.chibi-box.red    { color: var(--red);    background: #1e0408; }
+
+.chibi-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
-  background-size: 550px 550px, 350px 350px;
-  background-position: 0 0, 40px 60px;
-  opacity: 0.2;
-  z-index: 0;
-  animation: backgroundScroll 120s linear infinite;
+  object-fit: cover;
+  image-rendering: pixelated;
 }
 
-@keyframes backgroundScroll {
-  from { background-position: 0 0, 40px 60px; }
-  to { background-position: 550px 550px, 390px 410px; }
+.chibi-initials {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  color: currentColor;
+  opacity: 0.55;
 }
 
-/* Container */
-.console-container {
-  width: 95vw;
-  height: 90vh;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--panel-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05);
-}
-
-/* Header styling */
-.console-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-glow);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(8, 12, 28, 0.8);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.console-title {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.25rem;
-  letter-spacing: 2px;
-  color: var(--cyan);
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-}
-
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--alert-red);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--alert-red);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.4; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.4; }
-}
-
-.system-status {
-  display: flex;
-  gap: 32px;
-}
-
-.status-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.status-indicator .label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-}
-
-.status-indicator .value {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.progress-bar-container {
-  width: 150px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--cyan) 0%, var(--rose) 100%);
-  transition: width 0.5s ease-in-out;
-}
-
-/* Grid Workspace */
-.workspace {
+.chibi-meta {
   flex: 1;
-  display: grid;
-  grid-template-columns: 4fr 5fr;
+  min-width: 0;
+}
+
+.chibi-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.35rem;
+  color: #d4c080;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Panels */
-.panel {
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
+.chibi-role {
+  font-size: 0.8rem;
+  color: #556677;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.suspects-panel {
-  border-right: 1px solid var(--border-glow);
+/* Unread response dot */
+.unread-dot {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--amber);
+  display: none;
+  box-shadow: 0 0 6px var(--amber);
+  animation: dot-pulse 1s ease-in-out infinite;
 }
 
-.panel-title {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.9rem;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
+.unread-dot.visible { display: block; }
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ================================================================
+   PIXEL BUTTONS
+================================================================ */
+.pixel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  letter-spacing: 0.5px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border: 2px solid currentColor;
+  background: transparent;
+  transition: background 0.08s, color 0.08s, transform 0.05s, box-shadow 0.05s;
+  box-shadow: 2px 2px 0 #000;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Suspect Grid */
-.suspect-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  flex: 1;
-  overflow-y: auto;
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 #000;
 }
 
-.suspect-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.3s ease;
-  min-height: 200px;
+.btn-vent-sm {
+  color: var(--red);
+  border-color: var(--red);
+  flex-shrink: 0;
+  font-size: 0.33rem;
+  padding: 3px 5px;
 }
 
-.suspect-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
-  transform: translateY(-2px);
+.btn-vent-sm:hover {
+  background: var(--red);
+  color: #000;
 }
 
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  font-family: 'Share Tech Mono', monospace;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.avatar.cyan { color: var(--cyan); border: 2px solid var(--cyan); }
-.avatar.gold { color: var(--gold); border: 2px solid var(--gold); }
-.avatar.emerald { color: var(--emerald); border: 2px solid var(--emerald); }
-.avatar.rose { color: var(--rose); border: 2px solid var(--rose); }
-
-.suspect-card h3 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.suspect-card .role {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.card-details {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-  margin-bottom: 16px;
-}
-
-.card-details strong {
-  color: var(--text-main);
-}
-
-/* Interrogation Chat Panel */
-.chat-panel {
-  background: rgba(4, 7, 18, 0.4);
-}
-
-.chat-log {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 16px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.system-message {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--gold);
-  line-height: 1.5;
-  background: rgba(245, 158, 11, 0.05);
-  border-left: 2px solid var(--gold);
-  padding: 8px 12px;
-  border-radius: 4px;
-}
-
-.chat-bubble-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 85%;
-}
-
-.chat-bubble-container.user {
-  align-self: flex-end;
-}
-
-.chat-bubble-container.suspect {
-  align-self: flex-start;
-}
-
-.chat-name {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.75rem;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.chat-bubble {
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.chat-bubble-container.user .chat-bubble {
-  background: rgba(6, 182, 212, 0.15);
-  border: 1px solid var(--cyan);
-  color: var(--text-main);
-  border-bottom-right-radius: 0;
-}
-
-.chat-bubble-container.user .chat-name {
+.btn-send {
   color: var(--cyan);
-  align-self: flex-end;
+  border-color: var(--cyan);
 }
 
-.chat-bubble-container.suspect .chat-bubble {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-main);
-  border-bottom-left-radius: 0;
+.btn-send:hover {
+  background: var(--cyan);
+  color: #000;
 }
 
-/* Chat Input Form */
-.chat-input-area {
+.btn-retry {
+  color: var(--gold-light);
+  border-color: var(--gold);
+  box-shadow: 3px 3px 0 var(--gold-dark);
+  padding: 10px 20px;
+  font-size: 0.5rem;
+}
+
+.btn-retry:hover {
+  background: var(--gold);
+  color: #000;
+  box-shadow: 0 0 0;
+  transform: translate(3px, 3px);
+}
+
+/* ================================================================
+   DIALOG SECTION — floats over the bottom of the scene
+================================================================ */
+.dialog-section {
+  position: absolute;
+  bottom: 0;
+  left: 7vw;
+  right: 7vw;
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  z-index: 20;
+  /* Subtle backdrop so text stays readable over the character */
+  filter: drop-shadow(0 -8px 24px rgba(0,0,0,0.7));
+}
+
+/* ── Commander question bar (above the response box) ── */
+.question-bar {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 16px;
+  background: rgba(12, 22, 46, 0.92);
+  border: 2px solid #2a3d66;
+  border-bottom: none;
+  /* Pixel shadow connecting it to the dialog box below */
+  box-shadow: -2px -2px 0 #000, 2px 0 0 #000;
+  margin: 0 16px 0;
+}
+
+.question-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.42rem;
+  color: #5577aa;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.question-text {
+  font-size: 1.2rem;
+  color: #90b0d8;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* ── Main VN dialog box ── */
+.dialog-box {
+  background: var(--dialog-bg);
+  overflow: hidden;
+  border: 4px solid var(--gold);
+  box-shadow:
+    0 -2px 0 #000,
+    0 -4px 0 var(--gold-dark),
+    0 -6px 0 #000,
+    inset 0 0 0 2px var(--gold-dark),
+    inset 0 0 30px rgba(0,0,0,0.5);
+}
+
+/* Character name — header strip inside the box */
+.dialog-name-tab {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 6px 14px;
+  background: var(--gold);
+  color: #000;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--gold-dark);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3);
+}
+
+/* Single-response display — no scroll */
+.dialog-log {
+  padding: 12px 18px 10px;
+  min-height: 88px;
+  cursor: pointer;
+}
+
+#dialog-text {
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: #c8e0c0;
+  display: block;
+  white-space: pre-wrap;
+}
+
+#dialog-text.system {
+  color: var(--gold-light);
+  font-size: 1.1rem;
+}
+
+/* ================================================================
+   INPUT ROW
+================================================================ */
+.dialog-input-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #03090a;
+  border: 4px solid var(--gold);
+  border-top: 3px solid var(--gold-dark);
+  box-shadow:
+    0 2px 0 #000,
+    0 4px 0 var(--gold-dark),
+    0 6px 0 #000;
+  margin: 0 0 10px;
+}
+
+.input-cursor {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: var(--cyan);
+  animation: cursor-blink 1s steps(1) infinite;
+  flex-shrink: 0;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 #chat-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 14px 16px;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 0.9rem;
-  transition: all 0.3s;
+  background: #010a04;
+  border: 2px solid #1a3020;
+  color: var(--cyan);
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  padding: 4px 10px;
+  outline: none;
+  transition: border-color 0.15s;
 }
 
 #chat-input:focus {
-  outline: none;
   border-color: var(--cyan);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 8px rgba(0,212,255,0.15);
 }
 
-/* Buttons */
-.btn {
-  font-family: 'Share Tech Mono', monospace;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
+#chat-input::placeholder { color: #1e3828; }
+
+/* ================================================================
+   DIAMOND STRIP
+================================================================ */
+.diamond-strip {
+  flex-shrink: 0;
+  height: 20px;
+  border-top: 3px solid #0d3d6e;
+  background:
+    repeating-conic-gradient(
+      #1258a8 0% 25%,
+      #0a3d7a 0% 50%
+    ) 0 0 / 20px 20px;
+  image-rendering: pixelated;
 }
 
-.btn-vent {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--alert-red);
-  color: var(--alert-red);
-  width: 100%;
-}
-
-.btn-vent:hover {
-  background: var(--alert-red);
-  color: white;
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-}
-
-.btn-send {
-  background: var(--cyan);
-  color: #040712;
-}
-
-.btn-send:hover {
-  background: #22d3ee;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
-}
-
-/* Endgame Overlay */
+/* ================================================================
+   ENDGAME OVERLAY
+================================================================ */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(2, 4, 10, 0.9);
-  backdrop-filter: blur(15px);
+  inset: 0;
+  background: rgba(0,0,0,0.88);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 100;
-  transition: opacity 0.5s ease;
+  justify-content: center;
+  z-index: 800;
 }
 
-.overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+.overlay.hidden { display: none; }
 
-.overlay-content {
+.vn-modal {
+  background: #030d10;
+  border: 4px solid var(--gold);
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 4px var(--gold-dark),
+    0 0 0 6px #000,
+    inset 0 0 0 2px var(--gold-dark);
+  padding: 32px 40px;
+  max-width: 540px;
+  width: 90%;
   text-align: center;
-  max-width: 500px;
-  padding: 40px;
-  background: rgba(13, 20, 38, 0.8);
-  border: 1px solid var(--border-glow);
-  border-radius: 16px;
-  box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-.overlay-content h2 {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 2.2rem;
+.vn-modal-header {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  color: var(--gold-light);
   letter-spacing: 3px;
-  margin-bottom: 20px;
 }
 
-.overlay-content p {
-  font-size: 1.1rem;
-  color: var(--text-muted);
+.vn-modal-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.vn-modal-title.victory-title { color: var(--green); }
+.vn-modal-title.defeat-title  { color: var(--red); }
+
+.vn-modal-desc {
+  font-size: 1.2rem;
+  color: #8090a0;
   line-height: 1.6;
-  margin-bottom: 30px;
-}
-
-.btn-retry {
-  background: transparent;
-  border: 1px solid var(--text-main);
-  color: var(--text-main);
-  padding: 12px 28px;
-}
-
-.btn-retry:hover {
-  background: var(--text-main);
-  color: #02040a;
-}
-
-.victory-title {
-  color: var(--emerald);
-  text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-}
-
-.defeat-title {
-  color: var(--alert-red);
-  text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+  max-width: 380px;
 }
