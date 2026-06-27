@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import pydantic
 from google.antigravity import Agent, LocalAgentConfig
@@ -69,6 +70,12 @@ async def interrogate_crew(payload: InterrogationRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# Serve the static frontend (index.html, app.js, style.css) — must come after API routes
+_base_dir = os.path.dirname(os.path.abspath(__file__))
+app.mount("/", StaticFiles(directory=_base_dir, html=True), name="static")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True)
+    port = int(os.getenv("PORT", "8080"))
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
