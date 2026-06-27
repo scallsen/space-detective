@@ -185,7 +185,7 @@ function selectSuspect(key) {
   // Update main sprite (try real sprite, fall back to placeholder)
   const img = new Image();
   img.onload = () => { mainSprite.src = suspect.sprite; };
-  img.onerror = () => { mainSprite.src = 'images/placeholder.png'; };
+  img.onerror = () => { mainSprite.src = 'images/fullsprite_chiefengineer.png'; };
   img.src = suspect.sprite;
 
   // Clear unread dot
@@ -335,7 +335,7 @@ function resetGame() {
 
   dialogNameTab.textContent = '— SELECT A SUSPECT —';
   questionText.textContent = '—';
-  mainSprite.src = 'images/placeholder.png';
+  mainSprite.src = 'images/fullsprite_chiefengineer.png';
   showText('[ OXYGEN LINE SEVERED — SECTOR 7 — 04:15 ]\n[ SELECT A CREW MEMBER AND BEGIN INTERROGATION. ]', true, true);
 
   updateStatusUI();
