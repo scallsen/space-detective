@@ -170,7 +170,7 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   z-index: 3;
   pointer-events: none;
@@ -199,7 +199,7 @@ body {
   image-rendering: auto;
   z-index: 4;
   max-width: 55%;
-  transform: translateY(-8%);
+  transform: translateY(-10%);
 }
 
 /* ================================================================
