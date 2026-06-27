@@ -1,4 +1,4 @@
-# CLAUDE.md - Agent Instructions & Architecture
+# AGENT.md - Agent Instructions & Architecture
 
 This document serves as the guide for any AI agents or developers contributing to **Airlock Sabotage**. Update this file whenever APIs, dependencies, or core gameplay structures change.
 
