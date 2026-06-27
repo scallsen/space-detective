@@ -174,7 +174,7 @@ body {
   justify-content: center;
   z-index: 3;
   pointer-events: none;
-  padding-bottom: 0;
+  padding-bottom: 35%;
   padding-right: 200px;
 }
 
@@ -191,15 +191,14 @@ body {
 
 .character-sprite {
   position: relative;
-  height: 85%;
-  max-height: 85%;
+  height: 100%;
+  max-height: 100%;
   width: auto;
   object-fit: contain;
-  object-position: bottom center;
+  object-position: center center;
   image-rendering: auto;
   z-index: 4;
   max-width: 55%;
-  transform: translateY(-10%);
 }
 
 /* ================================================================
