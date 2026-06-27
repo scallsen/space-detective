@@ -1,6 +1,5 @@
 import asyncio
 import os
-import re
 from pathlib import Path
 from typing import Optional
 
@@ -30,7 +29,7 @@ def configure_environment():
         os.environ["GEMINI_API_KEY"] = google_api_key
 
     os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "FALSE")
-    os.environ.setdefault("GOOGLE_GENAI_MODEL", "gemini-3.5-flash")
+    os.environ.setdefault("GOOGLE_GENAI_MODEL", "gemini-2.5-flash")
 
 
 configure_environment()
@@ -90,7 +89,6 @@ ROLE_ALIASES = {
     "security": "Security Guard",
     "guard": "Security Guard",
 }
-MAX_RESPONSE_SENTENCES = 3
 
 
 def normalize_role(role: str) -> str:
@@ -116,21 +114,7 @@ Database memory rules:
 - You may inspect another role only through get_alibi_for_role, which returns only records visible to your own role.
 - If a tool returns no visible evidence, answer with uncertainty instead of inventing a fact.
 - Keep all database, SQL, table, tool, and hidden flag details off-screen. The captain should hear natural in-role dialogue only.
-- Use two sentences by default. Never return more than three sentences.
 """
-
-
-def limit_response_sentences(text: str, max_sentences: int = MAX_RESPONSE_SENTENCES) -> str:
-    """Cap role dialogue so one agent cannot flood the interrogation UI."""
-    clean_text = " ".join(text.strip().split())
-    if not clean_text:
-        return clean_text
-
-    sentences = re.findall(r"[^.!?]+(?:[.!?]+|$)", clean_text)
-    if len(sentences) <= max_sentences:
-        return clean_text
-
-    return " ".join(sentence.strip() for sentence in sentences[:max_sentences])
 
 
 def build_role_system_instructions(role: str) -> str:
@@ -150,8 +134,7 @@ def build_role_system_instructions(role: str) -> str:
         f"{role_agent_instructions}\n\n"
         "# Output Contract\n"
         "Return a JSON object with one field named `response`. "
-        f"The `response` must be only what the {role} says to the captain. "
-        "Use two sentences by default and never more than three sentences.\n\n"
+        f"The `response` must be only what the {role} says to the captain.\n\n"
         f"{DB_TOOL_INSTRUCTIONS}"
     )
 
@@ -215,35 +198,55 @@ def build_role_bound_tools(role: str) -> list:
     ]
 
 
-async def ask_role_agent(role: str, question: str, api_key: str) -> str:
-    role = normalize_role(role)
-    config = LocalAgentConfig(
-        api_key=api_key,
-        model=os.getenv("GOOGLE_GENAI_MODEL", "gemini-3.5-flash"),
+def _build_agent_config(role: str, api_key: Optional[str]) -> LocalAgentConfig:
+    use_vertex = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE"
+    base = dict(
+        model=os.getenv("GOOGLE_GENAI_MODEL", "gemini-2.5-flash"),
         system_instructions=ROLE_SYSTEM_INSTRUCTIONS[role],
         tools=build_role_bound_tools(role),
         response_schema=RoleAgentResponse,
     )
+    if use_vertex:
+        base["vertex"] = True
+        base["project"] = os.getenv("GOOGLE_CLOUD_PROJECT")
+        base["location"] = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+    else:
+        base["api_key"] = api_key
+    return LocalAgentConfig(**base)
+
+
+async def ask_role_agent(role: str, question: str, api_key: Optional[str]) -> str:
+    role = normalize_role(role)
+    config = _build_agent_config(role, api_key)
 
     role_question = (
         f"The captain is interrogating the {role}.\n"
         f"Captain's question: {question}\n\n"
-        f"Answer only as the {role}. Use role names, not personal names. "
-        "Use two sentences by default and never more than three sentences."
+        f"Answer only as the {role}. Use role names, not personal names."
     )
 
     async with Agent(config=config) as agent:
         response = await agent.chat(role_question)
         structured_data = await response.structured_output()
-        if structured_data is None:
-            raise RuntimeError(f"{role} failed to return structured output.")
-        return limit_response_sentences(structured_data.response)
+        if structured_data is not None:
+            return structured_data.response
+        # Vertex AI fallback: parse JSON from text response
+        import json, re
+        raw = await response.text()
+        match = re.search(r'\{.*?"response"\s*:\s*"(.*?)".*?\}', raw, re.DOTALL)
+        if match:
+            return match.group(1)
+        try:
+            return json.loads(raw)["response"]
+        except Exception:
+            return raw.strip()
 
 
 @app.post("/api/interrogate")
 async def interrogate_crew(payload: InterrogationRequest):
+    use_vertex = os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "FALSE").upper() == "TRUE"
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not api_key:
+    if not use_vertex and not api_key:
         raise HTTPException(
             status_code=500,
             detail="Set GEMINI_API_KEY or GOOGLE_API_KEY in your environment or .env file.",
