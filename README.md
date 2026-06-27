@@ -1,3 +1,5 @@
+<img width="1125" height="705" alt="Screenshot 2026-06-27 at 6 18 14 PM" src="https://github.com/user-attachments/assets/f4d0da1d-29f1-4814-b7c3-f60d5b90277d" />
+
 # Airlock Sabotage
 
 A single-screen, browser-based detective game set aboard a space station in 2142. As the Station Commander, you must interrogate four crew suspects in a tense real-time deduction challenge — before the oxygen runs out.
@@ -17,6 +19,8 @@ The station's oxygen feed line has been severed. Four crew members had access to
 - Vent the wrong person and the real saboteur disables the escape pods
 
 Each suspect is powered by an independent Gemini AI agent with its own backstory, alibi, and access to a shared evidence database. The agent playing the saboteur will lie. The others will tell the truth — but only about what they actually know.
+
+<img width="2584" height="1024" alt="Character Lineup" src="https://github.com/user-attachments/assets/938ee6af-9dee-4f84-8e0e-bc49563cf2d7" />
 
 ---
 
