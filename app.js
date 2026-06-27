@@ -21,6 +21,50 @@ const dialogNameTab       = document.getElementById('dialog-name-tab');
 const questionText        = document.getElementById('question-text');
 const mainSprite          = document.getElementById('main-sprite');
 
+// ── Intro Overlay ──────────────────────────────────────────────
+(function initIntro() {
+  const overlay    = document.getElementById('intro-overlay');
+  const textEl     = document.getElementById('intro-text');
+  const pressKeyEl = document.getElementById('intro-press-key');
+
+  const INTRO = `The year is 2142. You are aboard a deep-space research station orbiting Saturn's moon, Titan. The station's primary mission: testing atmospheric synthesis prototypes that could one day make Mars habitable for human colonies.
+
+At exactly 04:16, automated warnings triggered a critical breach alert from Sector 7 — Oxygen Life Support. The main oxygen feed line was physically severed, venting the station's air reserves into space.
+
+Because of automatic lockdowns, the suspect list is restricted to the four crew members who were awake and patrolling near the affected sectors. As Station Commander, you have secured them in the Sub-Space Interrogation Channel.
+
+Oxygen reserves are dropping fast. You have 10 questions to identify the saboteur. Eject the right person through the airlock and the innocent crew can repair the feed line. Eject the wrong person — and no one leaves this station alive.`;
+
+  let idx = 0;
+  let twId = null;
+  let done = false;
+
+  function finish() {
+    if (twId) { clearTimeout(twId); twId = null; }
+    textEl.textContent = INTRO;
+    done = true;
+    pressKeyEl.classList.add('visible');
+  }
+
+  function tick() {
+    if (idx >= INTRO.length) { finish(); return; }
+    textEl.textContent += INTRO[idx++];
+    twId = setTimeout(tick, 18);
+  }
+
+  function handleInput() {
+    if (!done) { finish(); return; }
+    overlay.classList.add('hidden');
+    document.removeEventListener('keydown', handleInput);
+    overlay.removeEventListener('click', handleInput);
+    chatInput.focus();
+  }
+
+  setTimeout(tick, 400);
+  document.addEventListener('keydown', handleInput);
+  overlay.addEventListener('click', handleInput);
+})();
+
 // ── Typewriter ─────────────────────────────────────────────────
 let twTimer = null;
 let twFull  = '';

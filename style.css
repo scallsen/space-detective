@@ -607,3 +607,54 @@ body {
   line-height: 1.6;
   max-width: 380px;
 }
+
+/* ================================================================
+   INTRO OVERLAY
+================================================================ */
+#intro-overlay {
+  z-index: 802;
+  background: rgba(0, 2, 6, 0.96);
+  cursor: pointer;
+}
+
+.intro-modal {
+  max-width: 660px;
+  text-align: left;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 36px 44px;
+}
+
+.intro-alert-tag {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  color: var(--red);
+  letter-spacing: 2px;
+  animation: dot-pulse 0.8s steps(1) infinite;
+}
+
+.intro-body-text {
+  font-size: 1.25rem;
+  color: #9ab0a0;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  min-height: 130px;
+  width: 100%;
+}
+
+.intro-press-key {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.42rem;
+  color: var(--cyan);
+  letter-spacing: 1.5px;
+  align-self: center;
+  animation: cursor-blink 1s steps(1) infinite;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.intro-press-key.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
