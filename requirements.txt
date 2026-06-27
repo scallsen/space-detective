@@ -1,4 +1,6 @@
 google-antigravity
+google-adk
 fastapi
 uvicorn
 pydantic
+python-dotenv

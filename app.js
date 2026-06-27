@@ -4,7 +4,7 @@ let state = {
   oxygen: 100,
   questionsRemaining: 10,
   gameOver: false,
-  saboteur: 'jax',
+  saboteur: 'security_guard',
   activeSuspect: null
 };
 
@@ -62,55 +62,65 @@ function showText(text, isSystem, instant) {
 // Click dialog log to skip typewriter
 chatLog.addEventListener('click', skipTypewriter);
 
-// Per-suspect conversation history
-const histories = { elena: [], marcus: [], chen: [], jax: [] };
+// Per-role conversation history
+const histories = {
+  chief_engineer: [],
+  technician: [],
+  botanist: [],
+  security_guard: []
+};
 
-// Unread tracking — which suspects have new responses not yet viewed
-const unread = { elena: false, marcus: false, chen: false, jax: false };
+// Unread tracking: which role agents have new responses not yet viewed
+const unread = {
+  chief_engineer: false,
+  technician: false,
+  botanist: false,
+  security_guard: false
+};
 
 const suspects = {
-  elena: {
-    name: "Elena Rostova",
+  chief_engineer: {
+    name: "Chief Engineer",
     colorClass: "cyan",
     sprite: "sprites/elena.png",
     responses: {
-      alibi: "I was in Sector 2 (Reactor Core) troubleshooting a minor power surge from 04:00 to 04:30. You can check the logs — Marcus saw me there briefly at 04:05.",
-      jax: "Jax? He's security. He is supposed to be patrolling, but I rarely see him doing actual work. I don't know where he was during the leak.",
-      chen: "Dr. Chen is usually in the Greenhouse. She stays out of engineering business, which I appreciate.",
-      default: "Look, I've been working double shifts. I was in Sector 2 trying to prevent a reactor melt. What exactly are you implying?"
+      alibi: "I was in Sector 2 troubleshooting a reactor issue. The Technician saw me there briefly at 04:05.",
+      security_guard: "The Security Guard is supposed to be patrolling. I do not know where that role was during the leak.",
+      botanist: "The Botanist is usually in the Greenhouse. That role stays out of engineering business.",
+      default: "I was in Sector 2 trying to keep the reactor stable. What exactly are you implying?"
     }
   },
-  marcus: {
-    name: "Marcus Vance",
+  technician: {
+    name: "Technician",
     colorClass: "amber",
     sprite: "sprites/marcus.png",
     responses: {
-      alibi: "I was doing routine maintenance in Sector 2. Passed Elena around 04:05. Then I headed to the Lounge in Sector 5 to grab a coffee at 04:10 and stayed there alone until the alarm rang.",
-      jax: "Jax? Didn't see him in the Reactor Room, and he definitely wasn't in the lounge when I was drinking coffee.",
-      chen: "Dr. Chen is cool. A bit obsessive about her plants, but she doesn't bother anyone.",
-      default: "I was just trying to get some caffeine in my system. Ask the station computer if you don't believe my alibi."
+      alibi: "I was doing routine maintenance in Sector 2, then went to the Lounge in Sector 5 for coffee.",
+      security_guard: "I did not see the Security Guard in the Reactor Room or the Lounge.",
+      botanist: "The Botanist mostly stays near the plants. I did not have a reason to track that role.",
+      default: "I was doing maintenance. Dirty work, bad timing, not sabotage."
     }
   },
-  chen: {
-    name: "Dr. Mei-Ling Chen",
+  botanist: {
+    name: "Botanist",
     colorClass: "green",
     sprite: "sprites/chen.png",
     responses: {
-      alibi: "I was in the Greenhouse (Sector 4) checking hydroponic nutrient levels from 04:00 onwards. I was working alone.",
-      jax: "Jax? No, I haven't seen Jax since yesterday afternoon. Why do you ask? Was he supposed to be in the Greenhouse?",
-      chen: "Yes, I was checking the hydroponic systems. They require constant calibration.",
-      default: "I was alone in the greenhouse. The plants require quiet concentration. I did not see or hear anyone else until the sirens went off."
+      alibi: "I was in the Greenhouse checking hydroponic nutrient levels. I was working alone.",
+      security_guard: "The Security Guard? No, I did not see that role in the Greenhouse.",
+      botanist: "Yes, I was checking the hydroponic systems. They require constant calibration.",
+      default: "I was alone in the Greenhouse. I did not see anyone else until the sirens went off."
     }
   },
-  jax: {
-    name: "Jax Thorne",
+  security_guard: {
+    name: "Security Guard",
     colorClass: "red",
     sprite: "sprites/jax.png",
     responses: {
-      alibi: "I was in Sector 4 (Greenhouse) helping Dr. Chen move some heavy soil and equipment crates from 04:10 to 04:20. Standard security assistance.",
-      jax: "I was doing my duty. Standard patrol, followed by assisting the science staff in the greenhouse.",
-      chen: "Yeah, Dr. Chen was in the Greenhouse. I was helping her with the equipment crates at 04:15 when the line blew.",
-      default: "I was on duty. Security sweeps. Nothing unusual on my end until the decompression alarm sounded."
+      alibi: "I was in Sector 4 helping the Botanist move heavy equipment crates. Standard security assistance.",
+      security_guard: "I was doing my duty: patrols, checks, and emergency response.",
+      botanist: "The Botanist was in the Greenhouse. I was helping with equipment when the line blew.",
+      default: "I was on duty. Nothing unusual on my end until the decompression alarm sounded."
     }
   }
 };
@@ -193,9 +203,9 @@ async function generateReplies(question) {
     if (q.includes('where') || q.includes('alibi') || q.includes('time') ||
         q.includes('happen') || q.includes('incident') || q.includes('doing') ||
         q.includes('04:15')) cat = 'alibi';
-    else if (q.includes('jax') || q.includes('security') || q.includes('guard')) cat = 'jax';
-    else if (q.includes('chen') || q.includes('botanist') ||
-             q.includes('greenhouse') || q.includes('plants')) cat = 'chen';
+    else if (q.includes('security') || q.includes('guard')) cat = 'security_guard';
+    else if (q.includes('botanist') ||
+             q.includes('greenhouse') || q.includes('plants')) cat = 'botanist';
     return suspects[key].responses[cat] || suspects[key].responses.default;
   };
 
@@ -247,11 +257,11 @@ function ventSuspect(suspectKey) {
 
   if (suspectKey === state.saboteur) {
     triggerEndGame(true, 'SABOTEUR NEUTRALIZED',
-      'Excellent work, Commander. You successfully identified Jax Thorne as the saboteur. He was ejected through the airlock, and the remaining crew has repaired the oxygen feed. The station is secure.');
+      'Excellent work, Commander. You successfully identified the Security Guard as the saboteur. The role was ejected through the airlock, and the remaining crew has repaired the oxygen feed. The station is secure.');
   } else {
     const victim = suspects[suspectKey].name;
     triggerEndGame(false, 'MISSION FAILED',
-      `Fatal error. You vented ${victim}, who was innocent. With life support failing and key personnel lost, the actual saboteur (Jax Thorne) successfully disabled the remaining backup systems. The station went dark.`);
+      `Fatal error. You vented the ${victim}, who was innocent. With life support failing and key personnel lost, the actual saboteur successfully disabled the remaining backup systems. The station went dark.`);
   }
 }
 
@@ -288,5 +298,5 @@ function resetGame() {
   endOverlay.classList.add('hidden');
 }
 
-// Start with Elena selected by default
-selectSuspect('elena');
+// Start with Chief Engineer selected by default
+selectSuspect('chief_engineer');
